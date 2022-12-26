@@ -127,5 +127,71 @@ namespace PurcheseWork.Repository
                 throw;
             }
         }
+        //public async Task<MessageHelper> EditItems(List<EditItemsViewModel> editlist)
+        //{
+        //    try
+        //    {
+        //        List<TblItem> newObjList = new List<TblItem>();
+        //        foreach (var item in editlist)
+        //        {
+        //            var data = _context.TblItems.Where(x => x.IntItemId == item.IntItemId)
+        //                                         .Select(a => a).FirstOrDefault();
+        //            data.StrItemName = item.StrItemName;
+        //            data.NumStockQuantity = (int)item.NumStockQuantity;
+        //            newObjList.Add(data);
+        //        }
+        //        _context.TblItems.UpdateRange(newObjList);
+        //        await _context.SaveChangesAsync();
+        //        return new MessageHelper()
+        //        {
+
+        //            Message = "Successfully Update",
+        //            statuscode = 200,
+        //        };
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+            
+        //}
+
+        public async Task<MessageHelper> EditItem(List<EditItemsViewModel> editlist)
+        {
+            try
+            {
+
+
+                List<TblItem> newObjList = new List<TblItem>();
+                foreach (var item in editlist)
+                {
+                    var DuplicateValue = _context.TblItems.Where(x=>x.IntItemId != item.IntItemId &&  x.StrItemName == item.StrItemName && x.IsActive == true)
+                        .Select(a => a).FirstOrDefault();
+                    if (DuplicateValue != null)
+                    {
+                        throw new Exception($"Already Exits");
+                    }
+                    var data = _context.TblItems.Where(x => x.IntItemId == item.IntItemId)
+                                                 .Select(a => a).FirstOrDefault();
+                    data.StrItemName = item.StrItemName;
+                    data.NumStockQuantity = (int)item.NumStockQuantity;
+                    newObjList.Add(data);
+                }
+                _context.TblItems.UpdateRange(newObjList);
+                await _context.SaveChangesAsync();
+                return new MessageHelper()
+                {
+
+                    Message = "Successfully Update",
+                    statuscode = 200,
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

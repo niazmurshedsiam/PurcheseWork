@@ -48,5 +48,11 @@ namespace PurcheseWork.Controllers
             return await _iPurcheseCommon.GetItems(IntItemId);
 
         }
+        [HttpPut]
+        [Route("EditItem")]
+        public async Task<MessageHelper> Edit(List<EditItemsViewModel> editlist)
+        {
+            return await _iPurcheseCommon.EditItem(editlist);
+        }
     }
 }

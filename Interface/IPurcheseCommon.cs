@@ -10,6 +10,7 @@ namespace PurcheseWork.Interface
         public Task<MessageHelper> CreatePartner(PartnerViewModel create);
         public Task<MessageHelper> CreateItems(List<ItemsViewModel> createlist);
         public Task<List<GetItemsViewModel>> GetItems(int IntItemId);
+        public Task<MessageHelper> EditItem(List<EditItemsViewModel> edit);
 
     }
 }
