@@ -34,10 +34,10 @@ namespace PurcheseWork.Repository
                         NumStockQuantity = item.NumStockQuantity,
                         IsActive = true,
                     };
-                    await _context.TblItems.AddAsync(data);
-                    await _context.SaveChangesAsync();
-
+                    newitemList.Add(data);  
                 }
+                await _context.TblItems.AddRangeAsync(newitemList);
+                await _context.SaveChangesAsync();
 
                 return new MessageHelper()
                 {
@@ -97,6 +97,29 @@ namespace PurcheseWork.Repository
                     Message = "Create Successfully",
                     statuscode = 200
                 };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<List<GetItemsViewModel>> GetItems(int IntItemId)
+        {
+            try
+            {
+                var data = _context.TblItems.Where(x => x.IntItemId == IntItemId || IntItemId == 0)
+                                                            .Select(a => new GetItemsViewModel()
+                                                            {
+                                                                IntItemId = a.IntItemId,
+                                                                StrItemName = a.StrItemName,
+                                                                NumStockQuantity = a.NumStockQuantity,
+
+                                                            }
+                                                            ).ToList();
+
+                return data;
             }
             catch (Exception)
             {

@@ -8,7 +8,8 @@ namespace PurcheseWork.Interface
     {
         public  Task<MessageHelper> CreatePartnerType(PartnerTypeViewModel create);
         public Task<MessageHelper> CreatePartner(PartnerViewModel create);
-
         public Task<MessageHelper> CreateItems(List<ItemsViewModel> createlist);
+        public Task<List<GetItemsViewModel>> GetItems(int IntItemId);
+
     }
 }

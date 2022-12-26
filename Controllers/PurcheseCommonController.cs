@@ -40,5 +40,13 @@ namespace PurcheseWork.Controllers
             return Ok(await _iPurcheseCommon.CreateItems(createlist));
 
         }
+
+        [HttpGet]
+        [Route("GetItems")]
+        public async Task<List<GetItemsViewModel>> GetItems(int IntItemId)
+        {
+            return await _iPurcheseCommon.GetItems(IntItemId);
+
+        }
     }
 }
