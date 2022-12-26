@@ -31,5 +31,14 @@ namespace PurcheseWork.Controllers
 
             return Ok(await _iPurcheseCommon.CreatePartner(create));
         }
+
+        [HttpPost]
+        [Route("CreateItems")]
+        public async Task<IActionResult> CreateItems(List<ItemsViewModel> createlist)
+        {
+
+            return Ok(await _iPurcheseCommon.CreateItems(createlist));
+
+        }
     }
 }

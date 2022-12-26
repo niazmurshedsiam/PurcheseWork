@@ -2,6 +2,7 @@
 using PurcheseWork.DTO;
 using PurcheseWork.Helper;
 using PurcheseWork.Interface;
+using PurcheseWork.Models;
 using static PurcheseWork.DTO.CommonDTO;
 
 namespace PurcheseWork.Repository
@@ -18,8 +19,25 @@ namespace PurcheseWork.Repository
         {
             try
             {
+                List<TblItem> newitemList = new List<TblItem>();
+                foreach (var item in createlist)
+                {
+                    var DuplicateValue = _context.TblItems.Where(x => x.StrItemName == item.StrItemName && x.IsActive == true)
+                        .Select(a => a).FirstOrDefault();
+                    if (DuplicateValue != null)
+                    {
+                        throw new Exception($"Already Exits");
+                    }
+                    var data = new Models.TblItem()
+                    {
+                        StrItemName = item.StrItemName,
+                        NumStockQuantity = item.NumStockQuantity,
+                        IsActive = true,
+                    };
+                    await _context.TblItems.AddAsync(data);
+                    await _context.SaveChangesAsync();
 
-
+                }
 
                 return new MessageHelper()
                 {

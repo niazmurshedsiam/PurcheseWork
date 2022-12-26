@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPurcheseCommon, PurcheseCommonRepository>();
-builder.Services.AddScoped<IPartner, PartnerRepository>();
+
 
 var app = builder.Build();
 
