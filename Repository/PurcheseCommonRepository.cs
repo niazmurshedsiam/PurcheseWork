@@ -17,17 +17,37 @@ namespace PurcheseWork.Repository
 
         public async Task<MessageHelper> CreateItems(List<ItemsViewModel> createlist)
         {
+            int count = 0;
+            List<TblItem> duplicateList = new List<TblItem>();
             try
             {
                 List<TblItem> newitemList = new List<TblItem>();
+                
                 foreach (var item in createlist)
                 {
-                    var DuplicateValue = _context.TblItems.Where(x => x.StrItemName == item.StrItemName && x.IsActive == true)
+                    var DuplicateValue = _context.TblItems.Where(x => x.StrItemName.ToLower() == item.StrItemName.ToLower() && x.IsActive == true)
                         .Select(a => a).FirstOrDefault();
                     if (DuplicateValue != null)
                     {
-                        throw new Exception($"Already Exits");
+                        count++;
+                        var data1 = new Models.TblItem() {
+                            StrItemName = item.StrItemName,
+                            NumStockQuantity = item.NumStockQuantity,
+                            IsActive = true,
+                        };
+                        duplicateList.Add(data1);
+                        
                     }
+                    //if (count > 0)
+                    //{
+                    //    string msg = "";
+                    //    msg = msg + $"AlReady Exist Item Count: {count}" + " ";
+                    //    duplicateList.ForEach(x =>
+                    //    {
+                    //        msg = msg + x.StrItemName + ",";
+                    //    });
+                    //    throw new Exception($"{msg}");
+                    //}
                     var data = new Models.TblItem()
                     {
                         StrItemName = item.StrItemName,
@@ -35,6 +55,18 @@ namespace PurcheseWork.Repository
                         IsActive = true,
                     };
                     newitemList.Add(data);  
+                }
+                if (count > 0)
+                {
+                    string msg = "";
+                    msg = msg + $"AlReady Exist Item Count: {count}" + " ";
+                    duplicateList.ForEach(x =>
+                    {
+                        msg = msg + x.StrItemName + ",";
+
+                    });
+                    msg = msg.Remove(msg.Length - 1);
+                    throw new Exception($"{msg}");
                 }
                 await _context.TblItems.AddRangeAsync(newitemList);
                 await _context.SaveChangesAsync();
@@ -166,11 +198,11 @@ namespace PurcheseWork.Repository
                 List<TblItem> newObjList = new List<TblItem>();
                 foreach (var item in editlist)
                 {
-                    var DuplicateValue = _context.TblItems.Where(x=>x.IntItemId != item.IntItemId &&  x.StrItemName == item.StrItemName && x.IsActive == true)
+                    var DuplicateValue = _context.TblItems.Where(x=>/*x.IntItemId != item.IntItemId &&*/  x.StrItemName.ToLower() == item.StrItemName.ToLower() && x.IsActive == true)
                         .Select(a => a).FirstOrDefault();
                     if (DuplicateValue != null)
                     {
-                        throw new Exception($"Already Exits");
+                        throw new Exception($"{item.StrItemName} Name Already Exits");
                     }
                     var data = _context.TblItems.Where(x => x.IntItemId == item.IntItemId)
                                                  .Select(a => a).FirstOrDefault();
