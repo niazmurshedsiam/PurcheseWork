@@ -54,5 +54,65 @@ namespace PurcheseWork.Controllers
         {
             return await _iPurcheseCommon.EditItem(editlist);
         }
+
+        //[HttpPost]
+        //[Route("PurchasesCreate")]
+        //public async Task<MessageHelper> CreatePurchase(PurchasesViewModel create)
+        //{
+
+        //    return await _iPurcheseCommon.CreatePurchase(create);
+        //}
+      
+        //public async Task<IActionResult> CreatePurchaseDetails(PurchaseDetailViewModel create)
+        //{
+
+        //    return Ok(await _iPurcheseCommon.CreatePurchaseDetails(create));
+        //}
+        [HttpPost]
+        [Route("PurchasesDetailsCreate")]
+        public async Task<MessageHelper> CreatePurchase(PurchaseCommonVM create)
+        {
+            return await _iPurcheseCommon.CreatePurchase(create);
+        }
+        [HttpPost]
+        [Route("SalesDetailsCreate")]
+        public async Task<MessageHelper> CreateSales(SalesCommonViewModel create)
+        {
+            return await _iPurcheseCommon.CreateSales(create);
+        }
+
+        [HttpPost]
+        [Route("GetItemWiseDailyPurchase")]
+        public async Task<List<getDailyPurchanseReportViewModel>>getDailyPurchanseReportViewModel(DateTime dalilyPurchanseReport)
+        {
+
+            return await _iPurcheseCommon.getDailyPurchanseReportViewModel(dalilyPurchanseReport);
+
+        }
+
+        [HttpPost]
+        [Route("GetItemWiseMonthSales")]
+        public async Task<List<getMonthSalesReportViewModel>> GetMonthSalesReportViewModels(int Month,int Year)
+        {
+            return await _iPurcheseCommon.getMonthSalesReportViewModel(Month,Year);
+        }
+
+        [HttpPost]
+        [Route("getItemWiseDailyPurchaseVsSalesReports")]
+        public async Task<List<getItemWiseDailyPurchaseVsSalesReport>> getItemWiseDailyPurchaseVsSalesReports(DateTime DailyPurchaseVsSalesReportDate)
+        {
+            return await _iPurcheseCommon.getItemWiseDailyPurchaseVsSalesReports(DailyPurchaseVsSalesReportDate);
+        }
+
+        [HttpPost]
+        [Route("getItemReportWithGivenColumnReport")]
+        public async Task<List<getItemReportWithGivenColumnReport>> getItemReportWithGivenColumnReport()
+        {
+            return await _iPurcheseCommon.getItemReportWithGivenColumnReport();
+        }
+
+
+
+
     }
 }
