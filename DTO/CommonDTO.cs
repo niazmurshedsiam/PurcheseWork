@@ -55,7 +55,7 @@ namespace PurcheseWork.DTO
         public class PurchaseCommonVM
         {
             public PurchasesViewModel? header { get; set; }
-            public List<PurchaseDetailViewModel> details { get; set; }
+            public List<PurchaseDetailViewModel>? details { get; set; }
         }
         public  class PurchaseDetailViewModel
         {
@@ -86,7 +86,7 @@ namespace PurcheseWork.DTO
         public class SalesCommonViewModel
         {
             public SaleViewModel? header { get; set;}
-            public List<SalesDetailsViewModel> details { get; set; } 
+            public List<SalesDetailsViewModel>? details { get; set; } 
 
         }
         public class SalesDetailsViewModel

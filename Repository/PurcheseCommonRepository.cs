@@ -533,41 +533,49 @@ namespace PurcheseWork.Repository
 
         public async Task<List<getItemReportWithGivenColumnReport>> getItemReportWithGivenColumnReport()
         {
-            var Purshases = await Task.FromResult((from pur in _context.TblPurchases
-                                                   join purDel in _context.TblPurchaseDetails on pur.IntPurchaseId equals purDel.IntPurchaseId
-                                                   join itm in _context.TblItems on purDel.IntItemId equals itm.IntItemId
-                                                   group new { pur, purDel } by new { pur.DtePurchaseDate.Value.Month, pur.DtePurchaseDate.Value.Year } into g
-                                                   select new purchaseModelView
+            try
+            {
+                var Purshases = await Task.FromResult((from pur in _context.TblPurchases
+                                                       join purDel in _context.TblPurchaseDetails on pur.IntPurchaseId equals purDel.IntPurchaseId
+                                                       join itm in _context.TblItems on purDel.IntItemId equals itm.IntItemId
+                                                       group new { pur, purDel } by new { pur.DtePurchaseDate.Value.Month, pur.DtePurchaseDate.Value.Year } into g
+                                                       select new purchaseModelView
+                                                       {
+
+                                                           Month = g.Key.Month,
+                                                           Year = g.Key.Year,
+                                                           TotalPurPrice = g.Sum(s => s.purDel.NumUnitPrice * s.purDel.NumItemQuantity),
+
+                                                       }).ToList());
+
+                var Sales = await Task.FromResult((from sal in _context.TblSales
+                                                   join salDel in _context.TblSalesDetails on sal.IntSalesId equals salDel.IntSalesId
+                                                   join itm in _context.TblItems on salDel.IntItemId equals itm.IntItemId
+                                                   group new { sal, salDel } by new { sal.DteSalesDate.Value.Year, sal.DteSalesDate.Value.Month } into g
+                                                   select new SalesModelViewdel
                                                    {
-
                                                        Month = g.Key.Month,
-                                                       Year = g.Key.Year,
-                                                       TotalPurPrice = g.Sum(s => s.purDel.NumUnitPrice * s.purDel.NumItemQuantity),
-
+                                                       year = g.Key.Year,
+                                                       TotalSalPrice = g.Sum(s => s.salDel.NumItemQuantity * s.salDel.NumUnitPrice)
                                                    }).ToList());
+                var getItemReportWithGivenColumns = await Task.FromResult((from purs in Purshases
+                                                                           join sal in Sales on purs.Year equals sal.year
+                                                                           where purs.Month == sal.Month
+                                                                           select new getItemReportWithGivenColumnReport
+                                                                           {
+                                                                               Month = purs.Month,
+                                                                               Year = purs.Year,
+                                                                               TotalPurPrice = purs.TotalPurPrice,
+                                                                               TotalSalPrice = sal.TotalSalPrice,
+                                                                               status = purs.TotalPurPrice > sal.TotalSalPrice ? "Lost" : "Profit"
+                                                                           }).ToList()); ;
+                return getItemReportWithGivenColumns;
+            }
+            catch (Exception)
+            {
 
-            var Sales = await Task.FromResult((from sal in _context.TblSales
-                                               join salDel in _context.TblSalesDetails on sal.IntSalesId equals salDel.IntSalesId
-                                               join itm in _context.TblItems on salDel.IntItemId equals itm.IntItemId
-                                               group new { sal, salDel } by new { sal.DteSalesDate.Value.Year, sal.DteSalesDate.Value.Month } into g
-                                               select new SalesModelViewdel
-                                               {
-                                                   Month = g.Key.Month,
-                                                   year = g.Key.Year,
-                                                   TotalSalPrice = g.Sum(s => s.salDel.NumItemQuantity * s.salDel.NumUnitPrice)
-                                               }).ToList());
-            var getItemReportWithGivenColumns = await Task.FromResult((from purs in Purshases
-                                                                       join sal in Sales on purs.Year equals sal.year 
-                                                                       where purs.Month == sal.Month
-                                                                       select new getItemReportWithGivenColumnReport
-                                                                       {
-                                                                           Month = purs.Month,
-                                                                           Year = purs.Year,
-                                                                           TotalPurPrice = purs.TotalPurPrice,
-                                                                           TotalSalPrice = sal.TotalSalPrice,
-                                                                           status = purs.TotalPurPrice > sal.TotalSalPrice ? "Lost" : "Profit"
-                                                                       }).ToList()); ;
-            return getItemReportWithGivenColumns;
+                throw;
+            }
         }
     }
 }

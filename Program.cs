@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using PurcheseWork.DbContexts;
 using PurcheseWork.Interface;
 using PurcheseWork.Repository;
 
@@ -7,12 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var ConnectionStrings = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(ConnectionStrings));
+builder.Services.AddDbContext<PurcheseWork.DbContexts.AppDbContext>(options => options.UseSqlServer(ConnectionStrings));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IPurcheseCommon, PurcheseCommonRepository>();
+builder.Services.AddTransient<IPurcheseCommon, PurcheseCommonRepository>();
+
 
 
 var app = builder.Build();
